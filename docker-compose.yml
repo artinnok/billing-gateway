@@ -1,0 +1,19 @@
+version: '3.7'
+
+services:
+  db:
+    image: 'postgres:12.1'
+    container_name: db
+    ports:
+      - '5432:5432'
+    # WARNING изменить на файл для продакшена
+    environment:
+      POSTGRES_DB: billing
+      POSTGRES_USER: billing
+      POSTGRES_PASSWORD: security
+
+  broker:
+    image: 'redis:5.0.7'
+    container_name: broker
+    ports:
+      - '6379:6379'
