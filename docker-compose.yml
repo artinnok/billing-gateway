@@ -6,11 +6,11 @@ services:
     container_name: db
     ports:
       - '5432:5432'
-    # WARNING изменить на файл для продакшена
+    # WARNING изменить на файл (env_file) для продакшена
     environment:
-      POSTGRES_DB: billing
-      POSTGRES_USER: billing
-      POSTGRES_PASSWORD: security
+      POSTGRES_DB: 'billing'
+      POSTGRES_USER: 'billing'
+      POSTGRES_PASSWORD: 'security'
 
   broker:
     image: 'redis:5.0.7'
