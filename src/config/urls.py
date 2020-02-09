@@ -16,6 +16,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from api.views import users
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    #
+    # API
+    #
+    path('signup', users.SignupView.as_view()),
+    path('login', users.LoginView.as_view()),
 ]

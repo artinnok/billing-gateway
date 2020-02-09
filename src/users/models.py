@@ -26,10 +26,6 @@ class User(PermissionsMixin, AbstractBaseUser):
         verbose_name='электронная почта',
         unique=True,
     )
-    is_active = models.BooleanField(
-        verbose_name='аккаунт активен',
-        default=False,
-    )
     is_staff = models.BooleanField(
         verbose_name='технический аккаунт',
         default=False,
@@ -39,6 +35,10 @@ class User(PermissionsMixin, AbstractBaseUser):
 
     USERNAME_FIELD = 'email'
     objects = UserManager()
+
+    class Meta:
+        verbose_name = 'пользователь'
+        verbose_name_plural = 'пользователи'
 
     def __str__(self):
         return self.email
