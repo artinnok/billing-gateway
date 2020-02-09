@@ -1,10 +1,11 @@
-from django.contrib.auth import get_user_model, authenticate
+from django.conf import settings
 from django.db import transaction
+from django.contrib.auth import get_user_model, authenticate
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny
+from rest_framework.authtoken.models import Token
 
 from api.serializers import users
 from billing.models import Account
@@ -36,12 +37,11 @@ class SignupView(APIView):
     # TODO перенести в фоновые задачи
     def _create_default_account_list(self, user):
         with transaction.atomic():
-            for currency in Account.DEFAULT_CURRENCY_LIST:
+            for currency in settings.DEFAULT_CURRENCY_LIST:
                 Account.objects.create(
                     user=user,
                     currency=currency,
                 )
-
 
 
 class LoginView(APIView):

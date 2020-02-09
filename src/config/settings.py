@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-from pathlib import Path
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -42,7 +41,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework.authtoken',
     'users',
+    'billing',
 ]
 
 MIDDLEWARE = [
@@ -130,3 +131,42 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+#
+# DRF
+#
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}
+
+
+#
+# Billing
+#
+
+DEBIT = 'debit'
+CREDIT = 'credit'
+KIND_MAP = {
+    DEBIT: 'Дебет',
+    CREDIT: 'Кредит',
+}
+KIND_CHOICES = list(KIND_MAP.items())
+
+USD = 'usd'
+CNY = 'cny'
+EUR = 'eur'
+CURRENCY_MAP = {
+    USD: 'Доллар США',
+    CNY: 'Юань',
+    EUR: 'Евро',
+}
+CURRENCY_CHOICES = list(CURRENCY_MAP.items())
+DEFAULT_CURRENCY_LIST = [USD, CNY, EUR]
+
