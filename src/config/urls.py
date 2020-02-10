@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from api.views import auth, accounts, transfer, history
+from api.views import auth, accounts, transfer, operations
 
 
 urlpatterns = [
@@ -29,5 +29,5 @@ urlpatterns = [
     path('login', auth.LoginView.as_view()),
     path('transfer', transfer.TransferView.as_view()),
     path('accounts', accounts.AccountListView.as_view()),
-    path('operations', history.OperationListView.as_view()),
+    path('operations', operations.OperationListView.as_view()),
 ]

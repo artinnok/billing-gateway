@@ -3,7 +3,7 @@ from django.conf import settings
 from rest_framework.generics import ListAPIView
 from django_filters import rest_framework as filters
 
-from api.serializers.history import OperationSerializer
+from api.serializers.operations import OperationSerializer
 from billing.models import Operation
 
 
