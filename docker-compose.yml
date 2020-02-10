@@ -18,15 +18,15 @@ services:
     ports:
       - '6379:6379'
 
-  app:
-    build: '.'
-    image: 'billing:latest'
-    container_name: app
-    ports:
-      - '9000:9000'
-    environment:
-      DB_NAME: 'billing'
-      DB_USER: 'billing'
-      DB_PASSWORD: 'security'
-      DB_HOST: 'db'
-      SECRET_KEY: 'ejg&_cz6do@_^4u7bm70l1p1@fwltqs58rr=bksr#ykv6'
+#  app:
+#    build: '.'
+#    image: 'billing:latest'
+#    container_name: app
+#    ports:
+#      - '9000:9000'
+#    environment:
+#      DB_NAME: 'billing'
+#      DB_USER: 'billing'
+#      DB_PASSWORD: 'security'
+#      DB_HOST: 'db'
+#      SECRET_KEY: 'ejg&_cz6do@_^4u7bm70l1p1@fwltqs58rr=bksr#ykv6'
