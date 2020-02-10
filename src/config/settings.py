@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from decimal import Decimal
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -153,11 +154,12 @@ REST_FRAMEWORK = {
 
 DEBIT = 'debit'
 CREDIT = 'credit'
-KIND_MAP = {
+DIRECTION_MAP = {
     DEBIT: 'Дебет',
     CREDIT: 'Кредит',
 }
-KIND_CHOICES = list(KIND_MAP.items())
+DIRECTION_CHOICES = list(DIRECTION_MAP.items())
+
 
 USD = 'usd'
 CNY = 'cny'
@@ -168,5 +170,25 @@ CURRENCY_MAP = {
     EUR: 'Евро',
 }
 CURRENCY_CHOICES = list(CURRENCY_MAP.items())
+
 DEFAULT_CURRENCY_LIST = [USD, CNY, EUR]
+
+
+INTERNAL = 'internal'
+WIRE = 'wire'
+WALLET = 'wallet'
+CRYPTO_CURRENCY = 'crypto_currency'
+DEFAULT_ACCOUNT_LIST = [INTERNAL, WIRE, WALLET, CRYPTO_CURRENCY]
+
+
+TRANSFER = 'transfer'
+FEE = 'fee'
+KIND_MAP = {
+    TRANSFER: 'Перевод',
+    FEE: 'Комиссия',
+}
+KIND_CHOICES = list(KIND_MAP.items())
+
+
+DEFAULT_FEE_PERCENT = Decimal('2')
 
