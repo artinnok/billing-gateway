@@ -13,11 +13,11 @@ class Payment(models.Model):
         verbose_name_plural = 'платежи'
 
     @cached_property
-    def sender(self):
+    def sender_account(self):
         return self._get_sender_receiver(settings.CREDIT)
 
     @cached_property
-    def receiver(self):
+    def receiver_account(self):
         return self._get_sender_receiver(settings.DEBIT)
 
     def _get_sender_receiver(self, direction):
@@ -25,7 +25,7 @@ class Payment(models.Model):
             direction=direction,
             kind=settings.TRANSFER,
         )
-        return operation.account.user
+        return operation.account
 
     @cached_property
     def fee(self):

@@ -37,4 +37,27 @@ class Operation(models.Model):
 
     @property
     def fee(self):
-        return {'amount': self.payment.fee}
+        amount = self.payment.fee
+        # с пополнений счета платит комиссию другой
+        if self.direction == settings.DEBIT:
+            amount = settings.ZERO_FEE
+
+        return str(amount)
+
+    @property
+    def sender(self):
+        return self._get_sender_receiver('sender_account')
+
+    @property
+    def receiver(self):
+        return self._get_sender_receiver('receiver_account')
+
+    def _get_sender_receiver(self, account_name):
+        account = getattr(self.payment, account_name)
+
+        if account.user:
+            username = account.user.email
+        else:
+            username = account.code
+
+        return username
