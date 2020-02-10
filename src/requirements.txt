@@ -5,3 +5,4 @@ redis==3.4.1
 rq==1.2.2
 python-dotenv==0.11.0
 django-filter==2.2.0
+gunicorn==20.0.4
