@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework.authtoken.models import Token
 
-from api.serializers import users
+from api.serializers import auth
 from billing.models import Account
 from billing.utils import transfer_money
 
@@ -16,7 +16,7 @@ USER = get_user_model()
 
 
 class SignupView(APIView):
-    serializer_class = users.SignupSerializer
+    serializer_class = auth.SignupSerializer
     permission_classes = (AllowAny,)
 
     def post(self, request, **kwargs):
@@ -53,12 +53,12 @@ class SignupView(APIView):
                 from_account_id=internal_account.id,
                 to_account_id=account.id,
                 amount=settings.DEFAULT_USD_BALANCE,
-                fee=0,
+                fee=settings.ZERO_FEE,
             )
 
 
 class LoginView(APIView):
-    serializer_class = users.LoginSerializer
+    serializer_class = auth.LoginSerializer
     permission_classes = (AllowAny,)
 
     def post(self, request, **kwargs):

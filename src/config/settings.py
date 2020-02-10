@@ -192,4 +192,5 @@ KIND_CHOICES = list(KIND_MAP.items())
 
 DEFAULT_FEE_PERCENT = Decimal('2')
 DEFAULT_USD_BALANCE = Decimal('100')
+ZERO_FEE = Decimal('0')
 
