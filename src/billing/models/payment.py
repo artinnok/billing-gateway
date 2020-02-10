@@ -7,6 +7,17 @@ from django.core.exceptions import ObjectDoesNotExist
 
 
 class Payment(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        verbose_name='пользователь',
+        related_name='payment_list',
+        on_delete=models.CASCADE,
+    )
+    status = models.CharField(
+        verbose_name='статус',
+        max_length=10,
+        choices=settings.STATUS_CHOICES,
+    )
 
     class Meta:
         verbose_name = 'платеж'

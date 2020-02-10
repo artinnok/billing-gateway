@@ -6,12 +6,6 @@ from django.conf import settings
 
 
 class Account(models.Model):
-    # code нужен для внешних счетов
-    code = models.CharField(
-        verbose_name='код',
-        max_length=30,
-        blank=True,
-    )
     # null нужен для поддержки внешних счетов
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -27,6 +21,12 @@ class Account(models.Model):
         max_length=10,
         default=settings.USD,
         choices=settings.CURRENCY_CHOICES,
+    )
+    # code нужен для внешних счетов
+    code = models.CharField(
+        verbose_name='код',
+        max_length=30,
+        blank=True,
     )
 
     class Meta:

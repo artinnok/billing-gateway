@@ -31,6 +31,8 @@ class Migration(migrations.Migration):
             name='Payment',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='payment_list', to=settings.AUTH_USER_MODEL, verbose_name='пользователь')),
+                ('status', models.CharField(choices=[('initiated', 'Инициирован'), ('completed', 'Проведен'), ('declined', 'Отклонен')], max_length=10, verbose_name='статус')),
             ],
             options={
                 'verbose_name': 'платеж',

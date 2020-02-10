@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from api.views import auth, accounts, transfer, operations
+from api.views import auth, accounts, transfer, operations, payments
 
 
 urlpatterns = [
@@ -30,4 +30,5 @@ urlpatterns = [
     path('transfer', transfer.TransferView.as_view()),
     path('accounts', accounts.AccountListView.as_view()),
     path('operations', operations.OperationListView.as_view()),
+    path('payments/<int:pk>', payments.PaymentRetrieveView.as_view()),
 ]

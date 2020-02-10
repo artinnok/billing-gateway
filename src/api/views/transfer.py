@@ -1,9 +1,11 @@
+from django.conf import settings
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from billing.models import Account
+from tasks import transfer_money
+from billing.models import Payment
 from api.serializers.transfer import TransferSerializer
-from billing.utils import transfer_money, calculate_fee
 
 
 class TransferView(APIView):
@@ -16,23 +18,19 @@ class TransferView(APIView):
         )
         serializer.is_valid(raise_exception=True)
 
-        from_account = Account.objects.get(id=serializer.validated_data['from_account'])
-        to_account = Account.objects.get(id=serializer.validated_data['to_account'])
-
-        # TODO перенести в фоновые задачи
-        fee = calculate_fee(
-            from_account=from_account,
-            to_account=to_account,
-            amount=serializer.validated_data['amount'],
+        payment = Payment.objects.create(
+            user=request.user,
+            status=settings.INITIATED,
         )
-        money = transfer_money(
-            from_account_id=from_account.id,
-            to_account_id=to_account.id,
+        settings.QUEUE.enqueue(
+            transfer_money,
+            payment_id=payment.id,
+            from_account_id=serializer.validated_data['from_account'],
+            to_account_id=serializer.validated_data['to_account'],
             amount=serializer.validated_data['amount'],
-            fee=fee,
         )
 
         return Response({
-            'fee': money['fee'],
-            'rest_amount': money['rest_amount'],
+            'amount': serializer.validated_data['amount'],
+            'payment': payment.id
         })

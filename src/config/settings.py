@@ -13,7 +13,11 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 from decimal import Decimal
 
+from rq import Queue
+from redis import Redis
 from dotenv import load_dotenv
+
+
 load_dotenv()
 
 
@@ -147,11 +151,19 @@ REST_FRAMEWORK = {
     ]
 }
 
+#
+# RQ
+#
+
+REDIS_HOST = os.environ['REDIS_HOST']
+QUEUE = Queue(connection=Redis(host=REDIS_HOST))
+
 
 #
 # Billing
 #
 
+# direction
 DEBIT = 'debit'
 CREDIT = 'credit'
 DIRECTION_MAP = {
@@ -161,6 +173,7 @@ DIRECTION_MAP = {
 DIRECTION_CHOICES = list(DIRECTION_MAP.items())
 
 
+# currency
 USD = 'usd'
 CNY = 'cny'
 EUR = 'eur'
@@ -170,17 +183,10 @@ CURRENCY_MAP = {
     EUR: 'Евро',
 }
 CURRENCY_CHOICES = list(CURRENCY_MAP.items())
-
 DEFAULT_CURRENCY_LIST = [USD, CNY, EUR]
 
 
-INTERNAL = 'internal'
-WIRE = 'wire'
-WALLET = 'wallet'
-CRYPTO_CURRENCY = 'crypto_currency'
-DEFAULT_ACCOUNT_LIST = [INTERNAL, WIRE, WALLET, CRYPTO_CURRENCY]
-
-
+# kind
 TRANSFER = 'transfer'
 FEE = 'fee'
 KIND_MAP = {
@@ -190,6 +196,27 @@ KIND_MAP = {
 KIND_CHOICES = list(KIND_MAP.items())
 
 
+# status
+INITIATED = 'initiated'
+COMPLETED = 'completed'
+DECLINED = 'declined'
+STATUS_MAP = {
+    INITIATED: 'Инициирован',
+    COMPLETED: 'Проведен',
+    DECLINED: 'Отклонен',
+}
+STATUS_CHOICES = list(STATUS_MAP.items())
+
+
+# accounts
+INTERNAL = 'internal'
+WIRE = 'wire'
+WALLET = 'wallet'
+CRYPTO_CURRENCY = 'crypto_currency'
+DEFAULT_ACCOUNT_LIST = [INTERNAL, WIRE, WALLET, CRYPTO_CURRENCY]
+
+
+# other
 DEFAULT_FEE_PERCENT = Decimal('2')
 DEFAULT_USD_BALANCE = Decimal('100')
 ZERO_FEE = Decimal('0')

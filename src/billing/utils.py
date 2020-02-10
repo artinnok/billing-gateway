@@ -12,15 +12,11 @@ def calculate_fee(from_account, to_account, amount):
     return Decimal(amount) * settings.DEFAULT_FEE_PERCENT / Decimal('100')
 
 
-def transfer_money(from_account_id, to_account_id, amount, fee):
-    from_account = Account.objects.get(id=from_account_id)
-    to_account = Account.objects.get(id=to_account_id)
+def make_double_accrual(payment, from_account, to_account, amount, fee):
     amount = Decimal(amount)
     fee = Decimal(fee)
 
     with transaction.atomic():
-        payment = Payment.objects.create()
-
         # берем комиссию и считаем остаток средств
         fee = _take_fee(
             account=from_account,
@@ -36,6 +32,9 @@ def transfer_money(from_account_id, to_account_id, amount, fee):
             amount=rest_amount,
             payment=payment,
         )
+
+        payment.status = settings.COMPLETED
+        payment.save()
 
     return {'fee': fee, 'rest_amount': rest_amount, 'payment': payment}
 
