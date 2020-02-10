@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from api.views import users
+from api.views import users, accounts, billing
 
 
 urlpatterns = [
@@ -27,4 +27,6 @@ urlpatterns = [
     #
     path('signup', users.SignupView.as_view()),
     path('login', users.LoginView.as_view()),
+    path('accounts', accounts.AccountListView.as_view()),
+    path('transfer', billing.TransferView.as_view())
 ]
