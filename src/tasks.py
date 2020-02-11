@@ -14,7 +14,7 @@ USER = get_user_model()
 
 def init_account(user_id):
     with transaction.atomic():
-        user = USER.objects.get(user_id)
+        user = USER.objects.get(id=user_id)
 
         for currency in settings.DEFAULT_CURRENCY_LIST:
             account = Account.objects.create(

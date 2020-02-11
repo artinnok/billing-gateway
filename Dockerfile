@@ -1,7 +1,5 @@
 FROM python:3.7.6
 
-ENV PYTHONUNBUFFERED=0
-
 COPY src /src
 COPY entrypoint.sh /entrypoint.sh
 
