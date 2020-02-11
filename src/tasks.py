@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 django.setup()
 
 from billing.models import Account, Payment
-from billing.utils import make_double_accrual, calculate_fee
+from billing.utils import complete_payment
 
 
 USER = get_user_model()
@@ -32,33 +32,17 @@ def create_init_account(email, password):
                 currency=currency,
             )
             payment = Payment.objects.create(
-                user=user,
-                status=settings.INITIATED,
-            )
-
-            make_double_accrual(
-                payment=payment,
                 from_account=internal_account,
                 to_account=account,
                 amount=settings.DEFAULT_USD_BALANCE,
                 fee=settings.ZERO_FEE,
+                status=settings.INITIATED,
             )
 
+            complete_payment(payment)
 
-def transfer_money(payment_id, from_account_id, to_account_id, amount):
+
+def transfer_money(payment_id):
     payment = Payment.objects.get(id=payment_id)
-    from_account = Account.objects.get(id=from_account_id)
-    to_account = Account.objects.get(id=to_account_id)
 
-    fee = calculate_fee(
-        from_account=from_account,
-        to_account=to_account,
-        amount=amount,
-    )
-    make_double_accrual(
-        payment=payment,
-        from_account=from_account,
-        to_account=to_account,
-        amount=amount,
-        fee=fee,
-    )
+    complete_payment(payment)

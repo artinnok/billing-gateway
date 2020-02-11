@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from rest_framework.generics import get_object_or_404
 
+from billing.models import Account
+
 
 class TransferSerializer(serializers.Serializer):
     from_account = serializers.IntegerField()
@@ -18,3 +20,8 @@ class TransferSerializer(serializers.Serializer):
             raise serializers.ValidationError('not_enough_money')
 
         return data
+
+    def validate_to_account(self, value):
+        get_object_or_404(Account.objects.all(), id=value)
+
+        return value

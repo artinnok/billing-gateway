@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from tasks import transfer_money
-from billing.models import Payment
+from billing.models import Payment, Account
 from api.serializers.transfer import TransferSerializer
 
 
@@ -18,19 +18,24 @@ class TransferView(APIView):
         )
         serializer.is_valid(raise_exception=True)
 
+        from_account = Account.objects.get(id=serializer.validated_data['from_account'])
+        to_account = Account.objects.get(id=serializer.validated_data['to_account'])
+        amount = serializer.validated_data['amount']
         payment = Payment.objects.create(
-            user=request.user,
+            from_account=from_account,
+            to_account=to_account,
+            amount=amount,
+            fee=Payment.calculate_fee(from_account, to_account, amount),
             status=settings.INITIATED,
         )
+
         settings.QUEUE.enqueue(
             transfer_money,
             payment_id=payment.id,
-            from_account_id=serializer.validated_data['from_account'],
-            to_account_id=serializer.validated_data['to_account'],
-            amount=serializer.validated_data['amount'],
         )
 
         return Response({
-            'amount': serializer.validated_data['amount'],
+            'amount': payment.amount,
+            'fee': payment.fee,
             'payment': payment.id
         })

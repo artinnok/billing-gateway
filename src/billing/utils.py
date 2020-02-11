@@ -3,40 +3,30 @@ from decimal import Decimal
 from django.db import transaction
 from django.conf import settings
 
-from billing.models import Operation, Account, Payment
+from billing.models import Operation, Account
 
 
-def calculate_fee(from_account, to_account, amount):
-    if from_account.user == to_account.user:
-        return Decimal('0')
-    return Decimal(amount) * settings.DEFAULT_FEE_PERCENT / Decimal('100')
-
-
-def make_double_accrual(payment, from_account, to_account, amount, fee):
-    amount = Decimal(amount)
-    fee = Decimal(fee)
-
+def complete_payment(payment):
     with transaction.atomic():
         # берем комиссию и считаем остаток средств
-        fee = _take_fee(
-            account=from_account,
-            fee=fee,
+        _take_fee(
+            account=payment.from_account,
+            fee=payment.fee,
             payment=payment,
         )
-        rest_amount = amount - fee
 
         # реализуем стандартное двойное начисление
-        _make_payment(
-            from_account=from_account,
-            to_account=to_account,
-            amount=rest_amount,
+        _make_double_accrual(
+            from_account=payment.from_account,
+            to_account=payment.to_account,
+            amount=payment.rest_amount,
             payment=payment,
         )
 
         payment.status = settings.COMPLETED
         payment.save()
 
-    return {'fee': fee, 'rest_amount': rest_amount, 'payment': payment}
+    return payment
 
 
 def _take_fee(account, fee, payment):
@@ -48,12 +38,12 @@ def _take_fee(account, fee, payment):
         currency=account.currency,
     )
 
-    _make_payment(account, internal_account, fee, payment, settings.FEE)
+    _make_double_accrual(account, internal_account, fee, payment, settings.FEE)
 
     return fee
 
 
-def _make_payment(from_account, to_account, amount, payment, kind=settings.TRANSFER):
+def _make_double_accrual(from_account, to_account, amount, payment, kind=settings.TRANSFER):
     Operation.objects.create(
         account=from_account,
         payment=payment,

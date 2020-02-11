@@ -46,11 +46,11 @@ class Operation(models.Model):
 
     @property
     def sender(self):
-        return self._get_sender_receiver('sender_account')
+        return self._get_sender_receiver('from_account')
 
     @property
     def receiver(self):
-        return self._get_sender_receiver('receiver_account')
+        return self._get_sender_receiver('to_account')
 
     def _get_sender_receiver(self, account_name):
         account = getattr(self.payment, account_name)
