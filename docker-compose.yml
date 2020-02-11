@@ -6,7 +6,6 @@ services:
     container_name: db
     ports:
       - '5432:5432'
-    # WARNING изменить на файл (env_file) для продакшена
     environment:
       POSTGRES_DB: 'billing'
       POSTGRES_USER: 'billing'
@@ -18,15 +17,31 @@ services:
     ports:
       - '6379:6379'
 
-#  app:
-#    build: '.'
-#    image: 'billing:latest'
-#    container_name: app
-#    ports:
-#      - '9000:9000'
-#    environment:
-#      DB_NAME: 'billing'
-#      DB_USER: 'billing'
-#      DB_PASSWORD: 'security'
-#      DB_HOST: 'db'
-#      SECRET_KEY: 'ejg&_cz6do@_^4u7bm70l1p1@fwltqs58rr=bksr#ykv6'
+  app:
+    build: '.'
+    image: 'billing:latest'
+    container_name: app
+    ports:
+      - '9000:9000'
+    environment:
+      DB_NAME: 'billing'
+      DB_USER: 'billing'
+      DB_PASSWORD: 'security'
+      DB_HOST: 'db'
+      SECRET_KEY: 'ejg&_cz6do@_^4u7bm70l1p1@fwltqs58rr=bksr#ykv6'
+      REDIS_HOST: 'broker'
+      DJANGO_SETTINGS_MODULE: 'config.settings'
+
+  worker:
+    build: '.'
+    image: 'billing:latest'
+    container_name: worker
+    command: bash -c "sleep 5 && rq worker --url redis://broker:6379/0"
+    environment:
+      DB_NAME: 'billing'
+      DB_USER: 'billing'
+      DB_PASSWORD: 'security'
+      DB_HOST: 'db'
+      SECRET_KEY: 'ejg&_cz6do@_^4u7bm70l1p1@fwltqs58rr=bksr#ykv6'
+      REDIS_HOST: 'broker'
+      DJANGO_SETTINGS_MODULE: 'config.settings'

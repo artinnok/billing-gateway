@@ -12,12 +12,9 @@ from billing.utils import complete_payment
 USER = get_user_model()
 
 
-def create_init_account(email, password):
+def init_account(user_id):
     with transaction.atomic():
-        user = USER.objects.create_user(
-            email=email,
-            password=password,
-        )
+        user = USER.objects.get(user_id)
 
         for currency in settings.DEFAULT_CURRENCY_LIST:
             account = Account.objects.create(

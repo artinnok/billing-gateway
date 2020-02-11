@@ -7,7 +7,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.authtoken.models import Token
 
 from api.serializers import auth
-from tasks import create_init_account
+from tasks import init_account
 
 
 USER = get_user_model()
@@ -24,13 +24,17 @@ class SignupView(APIView):
         )
         serializer.is_valid(raise_exception=True)
 
-        settings.QUEUE.enqueue(
-            create_init_account,
+        user = USER.objects.create_user(
             email=serializer.validated_data['email'].lower().strip(),
             password=serializer.validated_data['password'],
         )
 
-        return Response({'email': serializer.validated_data['email']})
+        settings.QUEUE.enqueue(
+            init_account,
+            user_id=user.id,
+        )
+
+        return Response({'email': user.email})
 
 
 class LoginView(APIView):
