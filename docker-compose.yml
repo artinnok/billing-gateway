@@ -30,7 +30,7 @@ services:
       DB_HOST: 'db'
       SECRET_KEY: 'ejg&_cz6do@_^4u7bm70l1p1@fwltqs58rr=bksr#ykv6'
       REDIS_HOST: 'broker'
-      DJANGO_SETTINGS_MODULE: 'config.settings'
+      DJANGO_SETTINGS_MODULE: 'config.production'
 
   worker:
     build: '.'
@@ -44,4 +44,4 @@ services:
       DB_HOST: 'db'
       SECRET_KEY: 'ejg&_cz6do@_^4u7bm70l1p1@fwltqs58rr=bksr#ykv6'
       REDIS_HOST: 'broker'
-      DJANGO_SETTINGS_MODULE: 'config.settings'
+      DJANGO_SETTINGS_MODULE: 'config.production'
