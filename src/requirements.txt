@@ -1,5 +1,5 @@
 django==3.0.3
-djangorestframework==3.11.0
+djangorestframework==3.11.2
 psycopg2-binary==2.8.4
 redis==3.4.1
 rq==1.2.2
